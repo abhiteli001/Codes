@@ -1,0 +1,118 @@
+import random
+import time
+
+# GETMART is a Online Store, which proceeds with the user inputs #
+# Code Proceeds by giving 3 options , 1.shopping ,2.to view the cart, 3.to exit the store#
+# Option 1 -- Shopping ,you will be prompted to input the customer id , wrt to customer the items will be added in list
+#             if you try to add the items not present in the store, the code checks if item is available in the near by
+#             store, for example try putting "Chocolate" or "Noodles"
+# Option 2 -- View Cart , you will be prompted to input the customer id again, if same id is input as in option 1,
+#             it will provide the Shopping list of the Customer who is indicated by Cust ID
+#             Further options will be prompted as the code continues in Option 2
+# Option 3 -- Does nothing , simply asks for the Customer ID and exits printing Thank you message wrt Customer ID
+#
+# The Entire code is run in while loop , to keep asking for repeated inputs.
+#
+# Please NOTE : I have added two Customer ID "123" and "145" default Address to show the address input is given
+#               other than given Customer IDs , the code asks for address input.
+#
+# Hope you enjoy the Code!!! Thank you for your time :).
+
+
+class GETMART:
+    def store(self):
+        print("Welcome to the GETMART Online Shop")
+        items = ["pasta","eggs","bread","cheese"]  # list of items which are available in store
+        customer_address = {123:"329 Comstock Ave,Syracuse",145:"Euclid st,New York"} # Existing Customer's Address
+        customer_shopping_list = [] # Holds each Customer's shopping list wrt Cust_id
+        customer_cart ={} # Final cart of the Customer
+        item_quantity = 0
+        cust_id_identifier = 0 # used to check
+        cart_value = 0
+        item_cost = 0
+        while(1):
+            print("Please select from the below options\n")
+            choice = int(input("Press \n1: Shopping \n2: To view your cart\n0: to exit\nYour choice: "))
+            cust_id = int(input("Please enter your customer id: "))
+
+            if choice == 1:
+                while(1):
+                    if cust_id_identifier == cust_id:
+                        print("Please add the item by typing the name of the item(for example type 'pasta' to add pasta)"
+                        "\ntype done to end finish the list")
+                        item_name = input()
+                        if item_name.casefold() == "done":
+                            customer_cart[cust_id] = tuple(customer_shopping_list)
+                            break
+                        elif item_name.casefold() in items:
+                            customer_shopping_list.append(item_name)
+                        else:
+                            new_item_request = input("Entered Item is not available in store,Please press Yes to create "
+                                             "the item request :")
+                            if new_item_request.casefold() == "yes":
+                                print("\nRequest successfully placed, Checking for the item in near by store .....")
+                                time.sleep(5)
+                                item_quantity = random.randint(-10,10)
+                                if item_quantity > 0:
+                                    print("\nItem found in the near by store. Adding the item in your list\n")
+                                    items.append(item_name)
+                                    customer_shopping_list.append(item_name)
+                                else:
+                                    print("\nSorry! Item is out of stock. Please select different item.\n")
+                    else:
+                        print("Hello {0}".format(cust_id))
+                        cust_id_identifier = cust_id
+                        customer_shopping_list.clear()
+            elif choice == 2:
+                try:
+                    print("\nGetting cart details of the customer:{0}".format(cust_id))
+                    print("Customer ID : {}\nCart Details:".format(cust_id))
+                    print(list(customer_cart[cust_id]))
+                    print("")
+                    checkout = input("Type checkout to checkout the cart\nType continue to resume shopping: ")
+                    if checkout.casefold() == "checkout":
+                        for item in customer_shopping_list:
+                            item_cost = random.randint(1,5)
+                            print("{0} costs {1} dollars".format(item,item_cost))
+                            cart_value = cart_value + item_cost
+                        print("\nTotal cart bill : {0} dollars\n".format(cart_value))
+                        payment = input("Type proceed to pay\nType continue to quit and continue shopping: ")
+                        if payment.casefold() == "proceed":
+                            try:
+                                while(1):
+                                    print("\nPlease verify your address :{0}\n".format(customer_address[cust_id]))
+                                    add_choice = input("Type continue to proceed to payment\nType change to edit the address: ")
+                                    if add_choice.casefold() == "change":
+                                        update_add = input("Please enter the new Address: ")
+                                        customer_address[cust_id] = update_add
+                                        print("\nPlease wait! Updating the address...")
+                                        time.sleep(5)
+                                        print("Address updated successfully!")
+                                    else:
+                                        print("\nPlease wait receiving the payment from your store credit")
+                                        time.sleep(5)
+                                        print("Thank you. Payment received, your package will be delivered on given address")
+                                        break
+                                print("\nThank you for shopping with us {}".format(cust_id))
+                                break
+                            except KeyError:
+                                new_add = input("Please enter your address: ")
+                                print("\nPlease wait! updating the address...")
+                                time.sleep(5)
+                                print("Address updated successfully!")
+                                print("\nPlease wait receiving the payment from your store credit")
+                                time.sleep(5)
+                                print("\nThank you. Payment received, your package will be delivered on given address")
+                                break
+                        else:
+                            cart_value = 0
+                            continue
+                except KeyError:
+                    print("Customer's cart is empty! Please add items in your cart.\n")
+            elif choice == 0:
+                print("Thank you for shopping with us {}!".format(cust_id))
+                break
+
+if __name__ == "__main__":
+    p1 = GETMART()
+    p1.store()
